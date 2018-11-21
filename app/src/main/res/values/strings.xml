@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">TicKats</string>
+    <string name="fingerprint_screen">Fingerprint Authentication</string>
+
+
+    <string name="instructions">
+            Place your fingertip on the fingerprint sensor to verify your identity</string>
+</resources>

@@ -62,10 +62,11 @@ public class LocationPolling extends AsyncTask<String,Void,String> {
                 //Toast.makeText( context, "Gps Disabled", Toast.LENGTH_SHORT ).show();
             }
         };
-        locationManager.requestLocationUpdates(locationManager.GPS_PROVIDER, 1000*60*5, 0,locationListener, Looper.getMainLooper());
-        String LocationProvider = locationManager.GPS_PROVIDER;
-        Location lastKnownLocation = locationManager.getLastKnownLocation(LocationProvider);
-
+        try {
+            locationManager.requestLocationUpdates(locationManager.GPS_PROVIDER, 1000 * 60 * 5, 0, locationListener, Looper.getMainLooper());
+            String LocationProvider = locationManager.GPS_PROVIDER;
+            Location lastKnownLocation = locationManager.getLastKnownLocation(LocationProvider);
+        }catch(SecurityException e){Toast.makeText(context, "" + e, Toast.LENGTH_LONG).show(); return null;}
 
 
         return null;

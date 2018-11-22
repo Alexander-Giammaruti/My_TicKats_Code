@@ -9,7 +9,9 @@ import android.location.LocationManager;
 import android.location.LocationProvider;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Looper;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.widget.Toast;
 
 
@@ -20,6 +22,8 @@ class location{
 */
 
 public class LocationPolling extends AsyncTask<String,Void,String> {
+
+
 
     Context context;
     final int POLLING_GAP = 1000 * 60 * 5; //five minutes in milliseconds
@@ -32,13 +36,6 @@ public class LocationPolling extends AsyncTask<String,Void,String> {
 
 
 
-        //check for location privileges
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // If your app doesn't have this permission, then display the following text//
-            //Toast.makeText(context, "Please enable the Location Services permission", Toast.LENGTH_LONG).show();
-        }
-
-
         //get a reference to the system Location Manager
         LocationManager locationManager =(LocationManager)context.getSystemService(Context.LOCATION_SERVICE);
 
@@ -47,7 +44,7 @@ public class LocationPolling extends AsyncTask<String,Void,String> {
             @Override
             public void onLocationChanged(Location location) {
                 //called when a new location is found by the network location provider
-                //Toast.makeText(context, "Location:" + location.toString(), Toast.LENGTH_LONG).show();
+                Toast.makeText(context, "Location:" + location.toString(), Toast.LENGTH_LONG).show();
             }
 
             @Override
@@ -57,16 +54,16 @@ public class LocationPolling extends AsyncTask<String,Void,String> {
 
             @Override
             public void onProviderEnabled(String provider) {
-
+                //Toast.makeText( context, "Gps Enabled", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onProviderDisabled(String provider) {
-
+                //Toast.makeText( context, "Gps Disabled", Toast.LENGTH_SHORT ).show();
             }
         };
-        locationManager.requestLocationUpdates(locationManager.NETWORK_PROVIDER, 0, 0,locationListener);
-        String LocationProvider = locationManager.NETWORK_PROVIDER;
+        locationManager.requestLocationUpdates(locationManager.GPS_PROVIDER, 1000*60*5, 0,locationListener, Looper.getMainLooper());
+        String LocationProvider = locationManager.GPS_PROVIDER;
         Location lastKnownLocation = locationManager.getLastKnownLocation(LocationProvider);
 
 

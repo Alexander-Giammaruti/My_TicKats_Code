@@ -69,7 +69,7 @@ public class FingerprintHandler extends FingerprintManager.AuthenticationCallbac
         clockInTime = System.currentTimeMillis();
         String currentDateTImeString = DateFormat.getDateInstance().format(new java.util.Date());
         Toast.makeText(context, "Success!\nYou clocked in at: " + currentDateTImeString, Toast.LENGTH_LONG).show();
-        com.example.alexandergiammaruti.fingerprintauthentication.LocationPolling locationPolling = new com.example.alexandergiammaruti.fingerprintauthentication.LocationPolling(this.context);
+        LocationPolling locationPolling = new LocationPolling(this.context);
         locationPolling.execute();
     }
 

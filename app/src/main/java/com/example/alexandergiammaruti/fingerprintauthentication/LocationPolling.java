@@ -44,7 +44,12 @@ public class LocationPolling extends AsyncTask<String,Void,String> {
             @Override
             public void onLocationChanged(Location location) {
                 //called when a new location is found by the network location provider
-                Toast.makeText(context, "Location:" + location.toString(), Toast.LENGTH_LONG).show();
+                double latitude = location.getLatitude();
+                double longitude = location.getLongitude();
+                //send location data to the database
+                BackgroundWorker backgroundWorker = new BackgroundWorker(context);
+                backgroundWorker.execute("update_location", Double.toString(latitude), Double.toString(longitude));
+
             }
 
             @Override
@@ -62,10 +67,11 @@ public class LocationPolling extends AsyncTask<String,Void,String> {
                 //Toast.makeText( context, "Gps Disabled", Toast.LENGTH_SHORT ).show();
             }
         };
-        locationManager.requestLocationUpdates(locationManager.GPS_PROVIDER, 1000*60*5, 0,locationListener, Looper.getMainLooper());
-        String LocationProvider = locationManager.GPS_PROVIDER;
-        Location lastKnownLocation = locationManager.getLastKnownLocation(LocationProvider);
-
+        try {
+            locationManager.requestLocationUpdates(locationManager.GPS_PROVIDER, 1000 * 60 * 5, 0, locationListener, Looper.getMainLooper());
+            String LocationProvider = locationManager.GPS_PROVIDER;
+            Location lastKnownLocation = locationManager.getLastKnownLocation(LocationProvider);
+        }catch(SecurityException e){Toast.makeText(context, "" + e, Toast.LENGTH_LONG).show(); return null;}
 
 
         return null;

@@ -7,8 +7,7 @@ import android.hardware.fingerprint.FingerprintManager;
 import android.support.v4.app.ActivityCompat;
 import android.widget.Toast;
 import android.os.CancellationSignal;
-import android.support.v4.app.ActivityCompat;
-import android.widget.Toast;
+
 
 import java.text.DateFormat;
 
@@ -19,10 +18,12 @@ public class FingerprintHandler extends FingerprintManager.AuthenticationCallbac
 
     private CancellationSignal cancellationSignal;
     private Context context;
+    private MyCallback myCallback;
     public long clockInTime, clockOutTime;
 
-    public FingerprintHandler(Context mContext) {
+    public FingerprintHandler(Context mContext, MyCallback myCallback) {
         context = mContext;
+        this.myCallback = myCallback;
     }
 
     //Implement the startAuth method, which is responsible for starting the fingerprint authentication process//
@@ -64,14 +65,15 @@ public class FingerprintHandler extends FingerprintManager.AuthenticationCallbac
     }//@Override
 
     //onAuthenticationSucceeded is called when a fingerprint has been successfully matched to one of the fingerprints stored on the user’s device//
-    public void onAuthenticationSucceeded(
-            FingerprintManager.AuthenticationResult result) {
+    public void onAuthenticationSucceeded(FingerprintManager.AuthenticationResult result) {
         clockInTime = System.currentTimeMillis();
         String currentDateTImeString = DateFormat.getDateInstance().format(new java.util.Date());
         Toast.makeText(context, "Success!\nYou clocked in at: " + currentDateTImeString, Toast.LENGTH_LONG).show();
         LocationPolling locationPolling = new LocationPolling(this.context);
         locationPolling.execute();
+        myCallback.onSuccess(1, locationPolling);
     }
+
 
 }
 

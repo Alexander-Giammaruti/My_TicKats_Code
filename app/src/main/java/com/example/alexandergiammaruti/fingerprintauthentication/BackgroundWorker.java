@@ -1,6 +1,6 @@
 package com.example.alexandergiammaruti.fingerprintauthentication;
 
-import android.app.AlertDialog;
+
 import android.content.Context;
 import android.icu.util.Output;
 import android.os.AsyncTask;
@@ -23,7 +23,6 @@ public class BackgroundWorker extends AsyncTask<String,Void,String> {
 
     private TextView textView;
     Context context;
-    AlertDialog alertDialog;
 
 
     BackgroundWorker (Context ctx) {
@@ -124,23 +123,6 @@ public class BackgroundWorker extends AsyncTask<String,Void,String> {
 
         }
         return null;
-    }
-
-    @Override
-    protected void onPreExecute() {
-        alertDialog = new AlertDialog.Builder(context).create();
-        alertDialog.setTitle("Update Status");
-    }
-
-    @Override
-    protected void onPostExecute(String result) {
-        alertDialog.setMessage(result);
-        alertDialog.show();
-    }
-
-    @Override
-    protected void onProgressUpdate(Void... values) {
-        super.onProgressUpdate(values);
     }
 
 }

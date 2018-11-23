@@ -71,7 +71,7 @@ public class FingerprintHandler extends FingerprintManager.AuthenticationCallbac
         Toast.makeText(context, "Success!\nYou clocked in at: " + currentDateTImeString, Toast.LENGTH_LONG).show();
         LocationPolling locationPolling = new LocationPolling(this.context);
         locationPolling.execute();
-        myCallback.onSuccess(1);
+        myCallback.onSuccess(1, locationPolling);
     }
 
 

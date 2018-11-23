@@ -69,7 +69,7 @@ public class FingerprintAuthenticationActivity extends AppCompatActivity {
     private FingerprintManager fingerprintManager;
     private KeyguardManager keyguardManager;
     private static final int MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 0;
-
+    public LocationPolling lp;
 
 
     @Override
@@ -151,10 +151,13 @@ public class FingerprintAuthenticationActivity extends AppCompatActivity {
 
                     // Here, I’m referencing the FingerprintHandler class that we’ll create in the next section. This class will be responsible
                     // for starting the authentication process (via the startAuth method) and processing the authentication process events//
+
                     FingerprintHandler helper = new FingerprintHandler(this, new MyCallback() {
                         @Override
-                        public void onSuccess(int result){
+                        public void onSuccess(int result, LocationPolling locationPolling){
                             Intent nextScreen = new Intent(FingerprintAuthenticationActivity.this, Test_GPS_Cutoff.class);
+                            lp = locationPolling;
+
                             startActivity(nextScreen);
                         }
 

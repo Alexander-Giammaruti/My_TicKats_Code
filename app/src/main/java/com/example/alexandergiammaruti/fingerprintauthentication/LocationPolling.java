@@ -45,6 +45,12 @@ public class LocationPolling extends AsyncTask<String,Void,String> {
             public void onLocationChanged(Location location) {
                 //called when a new location is found by the network location provider
                 Toast.makeText(context, "Location:" + location.toString(), Toast.LENGTH_LONG).show();
+                double latitude = location.getLatitude();
+                double longitude = location.getLongitude();
+
+                BackgroundWorker backgroundWorker = new BackgroundWorker(context);
+                backgroundWorker.execute("update_location", Double.toString(latitude), Double.toString(longitude));
+
             }
 
             @Override

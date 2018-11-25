@@ -1,8 +1,17 @@
 <resources>
     <string name="app_name">TicKats</string>
     <string name="fingerprint_screen">Fingerprint Authentication</string>
-
-
+    <string name="lastname">lastname</string>
+    <string name="last_name">Last Name</string>
+    <string name="profilepic">profilepic</string>
+    <string name="hoursworked">hoursworked</string>
+    <string name="hours_worked1">Hours Worked:</string>
+    <string name="hours_worked">Hours Worked:</string>
+    <string name="hours">Hours</string>
+    <string name="clock_in_out">Clock In/Out</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
     <string name="instructions">
             Place your fingertip on the fingerprint sensor to verify your identity</string>
 </resources>

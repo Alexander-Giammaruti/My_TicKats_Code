@@ -156,7 +156,7 @@ public class FingerprintAuthenticationActivity extends AppCompatActivity {
                         @Override
                         public void onSuccess(int result, LocationPolling locationPolling){
                             Intent nextScreen = new Intent(FingerprintAuthenticationActivity.this, Test_GPS_Cutoff.class);
-                            lp = locationPolling;
+
 
                             startActivity(nextScreen);
                         }

@@ -1,8 +1,11 @@
 package com.example.alexandergiammaruti.fingerprintauthentication;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.CancellationSignal;
+import android.os.SystemClock;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -61,6 +64,8 @@ public class FingerprintAuthenticationActivity extends AppCompatActivity {
 
     // Declare a string variable for the key we’re going to use in our fingerprint authentication
     private static final String KEY_NAME = "yourKey";
+    private AlarmManager alarmManager;
+    private PendingIntent pendingIntent;
     private Cipher cipher;
     private KeyStore keyStore;
     private KeyGenerator keyGenerator;
@@ -71,12 +76,14 @@ public class FingerprintAuthenticationActivity extends AppCompatActivity {
     private static final int MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 0;
     public LocationPolling lp;
 
+    public static Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fingerprint__authenticator);
         textView = (TextView) findViewById(R.id.textview);
+        context = this;
 
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION)
@@ -154,11 +161,29 @@ public class FingerprintAuthenticationActivity extends AppCompatActivity {
 
                     FingerprintHandler helper = new FingerprintHandler(this, new MyCallback() {
                         @Override
-                        public void onSuccess(int result, LocationPolling locationPolling){
+                        public void onSuccess(int result){
                             Intent nextScreen = new Intent(FingerprintAuthenticationActivity.this, Test_GPS_Cutoff.class);
 
+                            final Intent locationPollingIntent = new Intent(context, LocationPolling.class);
 
+                            locationPollingIntent.putExtra("user_id", 42);
+
+                            alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+                            pendingIntent = PendingIntent.getService(context, 0, locationPollingIntent, 0);
+
+                            //Repeat every three minutes
+                            alarmManager.setRepeating(
+                                    AlarmManager.ELAPSED_REALTIME_WAKEUP,
+                                    SystemClock.elapsedRealtime(),
+                                    1000*60*5,
+                                    pendingIntent);
+                            /*
+                            Intent serviceIntent = new Intent(context, LocationPolling.class);
+                            serviceIntent.setAction("LocationPolling");
+                            */
+                            startService(locationPollingIntent);
                             startActivity(nextScreen);
+                            ((Globals) context.getApplicationContext()).setLocationService(locationPollingIntent);
                         }
 
                     });

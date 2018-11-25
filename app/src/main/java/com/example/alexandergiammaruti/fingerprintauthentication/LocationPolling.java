@@ -1,14 +1,18 @@
 package com.example.alexandergiammaruti.fingerprintauthentication;
 
 import android.Manifest;
+import android.app.Service;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.location.LocationProvider;
 import android.os.AsyncTask;
+import android.os.Binder;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.os.Looper;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -21,34 +25,55 @@ class location{
 }
 */
 
-public class LocationPolling extends AsyncTask<String,Void,String> {
 
 
+public class LocationPolling extends Service {
+
+
+    public static final String LOCATION_POLLING_TASK = "Location_Polling_Task";
+    private final IBinder mBinder = new LocalBinder();
+
+    public class LocalBinder extends Binder {
+        LocationPolling getService() {
+            return LocationPolling.this;
+        }
+    }
 
     Context context;
-    final int POLLING_GAP = 1000 * 60 * 5; //five minutes in milliseconds
+    final int POLLING_GAP = 1000 * 60; //five minutes in milliseconds
 
+    /*
     public LocationPolling(Context context){
         this.context=context;
     }
+*/
+    @Override
+    public IBinder onBind(Intent intent){
+        return mBinder;
+    }
 
-    protected String doInBackground(String... params) {
 
+    @Override
+    public int onStartCommand(final Intent intent, int flags, int startID) {
 
+        super.onStartCommand(intent, flags, startID);
 
         //get a reference to the system Location Manager
-        LocationManager locationManager =(LocationManager)context.getSystemService(Context.LOCATION_SERVICE);
+        LocationManager locationManager =(LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
+
+        final int userID = intent.getIntExtra("user_id", 0);
 
         //define a Location Listener that responds to location updates
-        LocationListener locationListener = new LocationListener() {
+        final LocationListener locationListener = new LocationListener() {
+
             @Override
             public void onLocationChanged(Location location) {
                 //called when a new location is found by the network location provider
                 double latitude = location.getLatitude();
                 double longitude = location.getLongitude();
                 //send location data to the database
-                BackgroundWorker backgroundWorker = new BackgroundWorker(context);
-                backgroundWorker.execute("update_location", Double.toString(latitude), Double.toString(longitude));
+                BackgroundWorker backgroundWorker = new BackgroundWorker(FingerprintAuthenticationActivity.context);
+                backgroundWorker.execute("update_location", Double.toString(longitude), Double.toString(latitude));
 
             }
 
@@ -71,12 +96,12 @@ public class LocationPolling extends AsyncTask<String,Void,String> {
             locationManager.requestLocationUpdates(locationManager.GPS_PROVIDER, 1000 * 60 * 5, 0, locationListener, Looper.getMainLooper());
             String LocationProvider = locationManager.GPS_PROVIDER;
             Location lastKnownLocation = locationManager.getLastKnownLocation(LocationProvider);
-        }catch(SecurityException e){Toast.makeText(context, "" + e, Toast.LENGTH_LONG).show(); return null;}
+        }catch(SecurityException e){Toast.makeText(context, "" + e, Toast.LENGTH_LONG).show();}
 
+        return START_STICKY;
+    }//end onStartCommand()
 
-        return null;
-    }//end doInBackground()
-
+    /*
     protected boolean isBetterLocation(Location location, Location currentBestLocation){
         if(currentBestLocation == null){
             //new location is better than no location at all
@@ -121,4 +146,5 @@ public class LocationPolling extends AsyncTask<String,Void,String> {
         }
         return provider1.equals(provider2);
     }
+    */
 }// end LocationPolling

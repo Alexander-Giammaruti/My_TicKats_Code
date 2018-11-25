@@ -128,7 +128,7 @@ public class BackgroundWorker extends AsyncTask<String,Void,String> {
                 BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
                 String post_data = URLEncoder.encode("longitude", "UTF-8") + "=" + URLEncoder.encode(longitude, "UTF-8") + "&" +
                         URLEncoder.encode("latitude", "UTF-8") + "=" + URLEncoder.encode(latitude, "UTF-8") + "&" +
-                        URLEncoder.encode("fwid", "UTF-8") + "=" + URLEncoder.encode(((Globals) context.getApplicationContext()).getFieldWorkerID(), "UTF-8");
+                        URLEncoder.encode("fwid", "UTF-8") + "=" + URLEncoder.encode(((Globals) this.context.getApplicationContext()).getFieldWorkerID(), "UTF-8");
                 bufferedWriter.write(post_data);
                 bufferedWriter.flush();
                 bufferedWriter.close();
@@ -166,8 +166,10 @@ public class BackgroundWorker extends AsyncTask<String,Void,String> {
 
     @Override
     protected void onPreExecute() {
-        alertDialog = new AlertDialog.Builder(context).create();
-        alertDialog.setTitle("Login Status");
+        if(context != null) {
+            alertDialog = new AlertDialog.Builder(context).create();
+            alertDialog.setTitle("Login Status");
+        }
     }
 
     @Override
@@ -177,8 +179,10 @@ public class BackgroundWorker extends AsyncTask<String,Void,String> {
         if(result.equals("Login Successful")){
             alertDialog.setMessage(result);
             alertDialog.show();
-            //Intent intent=new Intent(context,Account.class);
-            //context.startActivity(intent);
+
+            //start the next screen
+            Intent intent=new Intent(context,FingerprintAuthenticationActivity.class);
+            context.startActivity(intent);
         }
         else{
             alertDialog.setMessage("Login Unsuccessful.Try again.");

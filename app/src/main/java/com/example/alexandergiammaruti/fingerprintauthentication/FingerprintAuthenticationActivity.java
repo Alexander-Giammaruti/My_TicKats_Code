@@ -162,7 +162,7 @@ public class FingerprintAuthenticationActivity extends AppCompatActivity {
                     FingerprintHandler helper = new FingerprintHandler(this, new MyCallback() {
                         @Override
                         public void onSuccess(int result){
-                            Intent nextScreen = new Intent(FingerprintAuthenticationActivity.this, Test_GPS_Cutoff.class);
+                            Intent nextScreen = new Intent(FingerprintAuthenticationActivity.this, Account.class);
 
                             final Intent locationPollingIntent = new Intent(context, LocationPolling.class);
 
@@ -184,6 +184,7 @@ public class FingerprintAuthenticationActivity extends AppCompatActivity {
                             startService(locationPollingIntent);
                             startActivity(nextScreen);
                             ((Globals) context.getApplicationContext()).setLocationService(locationPollingIntent);
+
                         }
 
                     });
@@ -295,6 +296,8 @@ public class FingerprintAuthenticationActivity extends AppCompatActivity {
             // permissions this app might request.
         }
     }
+
+
 
 
 

@@ -14,6 +14,7 @@ import android.os.CancellationSignal;
 
 
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 public class FingerprintHandler extends FingerprintManager.AuthenticationCallback {
 
@@ -74,8 +75,13 @@ public class FingerprintHandler extends FingerprintManager.AuthenticationCallbac
     //onAuthenticationSucceeded is called when a fingerprint has been successfully matched to one of the fingerprints stored on the user’s device//
     public void onAuthenticationSucceeded(FingerprintManager.AuthenticationResult result) {
         clockInTime = System.currentTimeMillis();
+        java.util.Date d = new java.util.Date();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("hh:mm a");
         String currentDateTImeString = DateFormat.getDateInstance().format(new java.util.Date());
-        Toast.makeText(context, "Success!\nYou clocked in at: " + currentDateTImeString, Toast.LENGTH_LONG).show();
+        currentDateTImeString = simpleDateFormat.format(d);
+        ((Globals) context.getApplicationContext()).setClockInTime(clockInTime);
+        Toast.makeText(context, "Success! You clocked in at: " + currentDateTImeString, Toast.LENGTH_LONG).show();
+
 
 
 

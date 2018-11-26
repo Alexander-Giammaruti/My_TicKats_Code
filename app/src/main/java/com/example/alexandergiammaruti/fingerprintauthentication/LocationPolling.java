@@ -16,6 +16,7 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.widget.Toast;
 
 
@@ -46,7 +47,16 @@ public class LocationPolling extends Service {
     public LocationPolling(Context context){
         this.context=context;
     }
-*/
+    */
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        Log.i("EXIT", "Service destroyed! boo");
+        Intent broadcastIntent = new Intent(this, LocationPollingRestarterBroadcastReceiver.class);
+        sendBroadcast(broadcastIntent);
+    }
+
     @Override
     public IBinder onBind(Intent intent){
         return mBinder;
@@ -75,23 +85,24 @@ public class LocationPolling extends Service {
                 BackgroundWorker backgroundWorker = new BackgroundWorker(FingerprintAuthenticationActivity.context);
                 backgroundWorker.execute("update_location", Double.toString(longitude), Double.toString(latitude));
 
-            }
+            }//end onLocationChanged
 
             @Override
             public void onStatusChanged(String provider, int status, Bundle extras) {
 
-            }
+            }//end onStatusChanged
 
             @Override
             public void onProviderEnabled(String provider) {
                 //Toast.makeText( context, "Gps Enabled", Toast.LENGTH_SHORT).show();
-            }
+            }//end onProviderEnabled
 
             @Override
             public void onProviderDisabled(String provider) {
                 //Toast.makeText( context, "Gps Disabled", Toast.LENGTH_SHORT ).show();
-            }
-        };
+            }//end onProviderDisabled
+        };//end LocationListener
+
         try {
             locationManager.requestLocationUpdates(locationManager.GPS_PROVIDER, 1000 * 60 * 5, 0, locationListener, Looper.getMainLooper());
             String LocationProvider = locationManager.GPS_PROVIDER;
